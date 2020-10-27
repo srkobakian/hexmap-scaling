@@ -17,14 +17,11 @@ centroids <- create_centroids(postcode, "postcode_2016")
 # choropleth map display
 ggplot(postcode) + 
   geom_sf(fill = "grey") +
-  scale_fill_distiller(type = "seq", palette = "BuGn",
-                       direction = 1, na.value = "light grey") + 
-  coord_sf(crs = "+proj=longlat +datum=WGS84") +
-  theme(legend.position ="left", legend.title = element_text("Area (sqkm)"))
+  coord_sf(crs = "+proj=longlat +datum=WGS84")
 
 
 # Create hexagon location grid
-grid <- create_grid(centroids = centroids, hex_size = 0.2, buffer_dist = 2)
+grid <- create_grid(centroids = centroids, hex_size = 0.1, buffer_dist = 2)
 
 # plot of grid points over geographic polygons
 ggplot(postcode) + 
@@ -41,7 +38,7 @@ system.time(
   postcode_melb <- allocate(centroids = centroids,
                           hex_grid = grid,
                           sf_id = "postcode_2016",
-                          hex_size = 0.2, # same size used in create_grid
+                          hex_size = 0.1, # same size used in create_grid
                           hex_filter = 10,
                           focal_points = capital_cities,
                           width = 30, verbose = TRUE) # same column used in create_centroids
@@ -50,15 +47,15 @@ system.time(
 # Under 5 minutes for postcodes
 
 # save locations of hexagons as rda and csv
-save(postcode_melb, file = "postcode_melb.rda")
-write.csv(postcode_melb, file = "data/postcode_melb.csv")
+save(postcode_melb, file = "data/postcode_melb1.rda")
+write.csv(postcode_melb, file = "data/postcode_melb1.csv")
 
 # Alternatively if the file exists already
 #load("small_melb_city003.rda")
 
 # convert to polygons for plotting
 fort_postcode <- fortify_sfc(postcode)
-hex_postcode <- fortify_hexagon(postcode_melb, "postcode_2016", hex_size = 0.2)
+hex_postcode <- fortify_hexagon(postcode_melb, "postcode_2016", hex_size = 0.1)
 
 
 
@@ -79,6 +76,6 @@ melb_postcode
 
 
 
-ggsave(filename = "figures/aus_postcode.pdf", plot = melb_postcode,
+ggsave(filename = "figures/aus_postcode1.pdf", plot = melb_postcode,
        device = "pdf", bg = "transparent", dpi = 600,  width = 10, height = 8)
 
